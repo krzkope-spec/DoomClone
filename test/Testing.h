@@ -16,14 +16,14 @@ public:
     Testing(const Game& g): g_(g){};
     void PrintGreyScaleOnScreen() {
         Screen s = g_.getScreen();
-        double **greyScale = new double*[s.GetHeight()];
+        std::vector<std::vector<double>> greyScale(s.GetHeight(), std::vector<double>(s.GetWidth()));
         for (int i=0; i<s.GetHeight(); i++) {
-            greyScale[i] = new double[s.GetWidth()];
             for (int j=0; j<s.GetWidth(); j++) {
                 greyScale[i][j] = (double)(i*j)/(double)(s.GetWidth()*s.GetHeight());
             }
         }
         g_.getScreen().Render(greyScale);
+
     }
     void mainTest() {
 

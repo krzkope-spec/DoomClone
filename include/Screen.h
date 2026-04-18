@@ -4,7 +4,7 @@
 
 #ifndef DOOMCLONE_SCREEN_H
 #define DOOMCLONE_SCREEN_H
-
+#include<vector>
 
 class Screen {
 private:
@@ -13,7 +13,7 @@ private:
     char GetASCII(double grey); //skala: ' ', '.', '*', '%', '@'
     void CursorVisibility(bool value);
 public:
-    void Render(double** greyscale);
+    void Render(std::vector<std::vector<double>> greyscale);
     Screen(int xSize, int ySize);
     int GetWidth() {return xSize_;}
     int GetHeight() {return ySize_;}

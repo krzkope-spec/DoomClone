@@ -2,6 +2,7 @@
 #include <windows.h>
 #include<iostream>
 #include<sstream>
+#include<vector>
 
 Screen::Screen(int xSize, int ySize) {
     xSize_ = xSize;
@@ -22,7 +23,7 @@ Screen::Screen(int xSize, int ySize) {
 
     MoveWindow(cWindow, 100, 100, pixelWidth, pixelHeight, TRUE);
 }
-void Screen::Render(double** greyScale) {
+void Screen::Render(std::vector<std::vector<double>> greyScale) {
     std::ostringstream oss;
     for (int i=0; i<ySize_; i++) {
         for (int j=0; j<xSize_; j++) {
