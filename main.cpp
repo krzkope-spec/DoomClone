@@ -4,7 +4,7 @@
 int main() {
     Game game = Game(80,30);
     Testing testing = Testing(game);
-    testing.PrintGreyScaleOnScreen();
+    testing.printMap();
     std::cin.get();
     return EXIT_SUCCESS;
 }

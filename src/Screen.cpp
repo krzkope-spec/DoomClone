@@ -3,6 +3,7 @@
 #include<iostream>
 #include<sstream>
 #include<vector>
+#include<algorithm>
 
 Screen::Screen(int xSize, int ySize) {
     xSize_ = xSize;
@@ -23,10 +24,10 @@ Screen::Screen(int xSize, int ySize) {
 
     MoveWindow(cWindow, 100, 100, pixelWidth, pixelHeight, TRUE);
 }
-void Screen::Render(std::vector<std::vector<double>> greyScale) {
+void Screen::Render(const std::vector<std::vector<double>> greyScale) {
     std::ostringstream oss;
-    for (int i=0; i<ySize_; i++) {
-        for (int j=0; j<xSize_; j++) {
+    for (int i=0; i<std::min((size_t)ySize_, greyScale.size()); i++) {
+        for (int j=0; j<std::min((size_t)xSize_, greyScale[0].size()); j++) {
             oss<<GetASCII(greyScale[i][j]);
         }
         oss<<"\n";
