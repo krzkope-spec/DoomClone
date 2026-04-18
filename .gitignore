@@ -1,0 +1,13 @@
+cmake-build-*/
+.cmake/
+bin/
+obj/
+
+.idea/
+
+*.log
+*.tmp
+*.bak
+
+.DS_Store
+Thumbs.db
