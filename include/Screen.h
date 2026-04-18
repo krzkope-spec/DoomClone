@@ -10,15 +10,14 @@ class Screen {
 private:
     int xSize_;
     int ySize_;
-    char GetASCII(double grey); //skala: ' ', '.', '*', '%', '@'
-    void CursorVisibility(bool value);
+    char GetASCII(double grey) const; //skala: ' ', '.', '*', '%', '@'
 public:
-    void Render(std::vector<std::vector<double>> greyscale);
+    void Render(std::vector<std::vector<double>> greyscale) const;
     Screen(int xSize, int ySize);
-    int GetWidth() {return xSize_;}
-    int GetHeight() {return ySize_;}
-    void ShowConsoleCursor(bool showFlag);
-    void CursorToZero();
+    int GetWidth() const {return xSize_;}
+    int GetHeight() const {return ySize_;}
+    void ShowConsoleCursor(bool showFlag) const;
+    void CursorToZero() const;
 };
 
 

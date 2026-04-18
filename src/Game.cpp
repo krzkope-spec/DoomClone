@@ -34,11 +34,52 @@ int Game::LoadMap(const char *filename) {
 }
 void Game::Start() {
     s_.ShowConsoleCursor(false);
+    SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
     while (true) {
         Update();
         Sleep(deltaTime_);
     }
 }
 void Game::Update() {
+    ProcessInput(&mouseX_, &mouseY_);
 
+}
+void Game::ProcessInput(int* x, int* y) {
+    void* hInput = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD numEvents;
+    INPUT_RECORD inputBuffer[32];
+
+    // Sprawdź, czy są jakieś zdarzenia w kolejce (nie blokuje programu)
+    GetNumberOfConsoleInputEvents(hInput, &numEvents);
+
+    if (numEvents > 0) {
+        ReadConsoleInput(hInput, inputBuffer, 32, &numEvents);
+
+        for (DWORD i = 0; i < numEvents; i++) {
+            if (inputBuffer[i].EventType == KEY_EVENT) {
+                auto& keyEvent = inputBuffer[i].Event.KeyEvent;
+                if (keyEvent.bKeyDown) {
+                    // keyEvent.wVirtualKeyCode zawiera kod klawisza (np. VK_UP)
+                    eventMngr_.KeyboardDown(keyEvent.wVirtualKeyCode);
+                }
+            }
+            else if (inputBuffer[i].EventType == MOUSE_EVENT) {
+                auto& mouseEv = inputBuffer[i].Event.MouseEvent;
+                // Sprawdzenie, czy zdarzenie to faktycznie ruch (MOUSE_MOVED)
+                if (mouseEv.dwEventFlags & MOUSE_MOVED) {
+                    int currentX = mouseEv.dwMousePosition.X;
+                    int currentY = mouseEv.dwMousePosition.Y;
+                    // Obliczenie delty (różnicy)
+                    int deltaX = currentX - *x;
+                    int deltaY = currentY - *y;
+
+                    if (deltaX != 0 || deltaY != 0) {
+                        eventMngr_.MouseMove(deltaX, deltaY);
+                    }
+                    *x = currentX;
+                    *y = currentY;
+                }
+            }
+        }
+    }
 }

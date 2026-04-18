@@ -24,7 +24,7 @@ Screen::Screen(int xSize, int ySize) {
 
     MoveWindow(cWindow, 100, 100, pixelWidth, pixelHeight, TRUE);
 }
-void Screen::Render(const std::vector<std::vector<double>> greyScale) {
+void Screen::Render(const std::vector<std::vector<double>> greyScale) const{
     std::ostringstream oss;
     for (int i=0; i<std::min((size_t)ySize_, greyScale.size()); i++) {
         for (int j=0; j<std::min((size_t)xSize_, greyScale[0].size()); j++) {
@@ -34,17 +34,17 @@ void Screen::Render(const std::vector<std::vector<double>> greyScale) {
     }
     std::cout<<oss.str();
 }
-void Screen::CursorToZero() {
+void Screen::CursorToZero() const{
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), {0,0});
 }
-void Screen::ShowConsoleCursor(bool showFlag) {
+void Screen::ShowConsoleCursor (bool showFlag) const {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(hConsole, &cursorInfo);
     cursorInfo.bVisible = showFlag;
     SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
-char Screen::GetASCII(double grey) {
+char Screen::GetASCII(double grey) const{
     //grey ranges from 0-1
     if (grey<0.2) return ' ';
     if (grey<0.4) return '.';

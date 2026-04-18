@@ -4,7 +4,7 @@
 int main() {
     Game game = Game(80,30);
     Testing testing = Testing(game);
-    testing.printMap();
+    testing.MouseMovement();
     game.Start();
     return EXIT_SUCCESS;
 }
