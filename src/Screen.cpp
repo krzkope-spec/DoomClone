@@ -1,6 +1,7 @@
 #include "Screen.h"
 #include <windows.h>
 #include<iostream>
+#include<sstream>
 
 Screen::Screen(int xSize, int ySize) {
     xSize_ = xSize;
@@ -20,4 +21,22 @@ Screen::Screen(int xSize, int ySize) {
     int pixelHeight = ySize_ * fontInfo.dwFontSize.Y + 45;
 
     MoveWindow(cWindow, 100, 100, pixelWidth, pixelHeight, TRUE);
+}
+void Screen::Render(double** greyScale) {
+    std::ostringstream oss;
+    for (int i=0; i<ySize_; i++) {
+        for (int j=0; j<xSize_; j++) {
+            oss<<GetASCII(greyScale[i][j]);
+        }
+        oss<<"\n";
+    }
+    std::cout<<oss.str();
+}
+char Screen::GetASCII(double grey) {
+    //grey ranges from 0-1
+    if (grey<0.2) return ' ';
+    if (grey<0.4) return '.';
+    if (grey<0.6) return '*';
+    if (grey<0.8) return '#';
+    return '@';
 }

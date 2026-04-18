@@ -7,6 +7,7 @@ private:
     Screen s_;
 public:
     Game(int xSize, int ySize) : s_(xSize, ySize){};
+    Screen getScreen() const {return s_;}
 };
 
 

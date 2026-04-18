@@ -1,7 +1,9 @@
 #include<iostream>
 #include "Game.h"
+#include "Testing.h"
 int main() {
-    Game(80,30);
+    Game game = Game(80,30);
+    Testing testing = Testing(game);
     std::cin.get();
     return EXIT_SUCCESS;
 }

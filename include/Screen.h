@@ -10,11 +10,13 @@ class Screen {
 private:
     int xSize_;
     int ySize_;
-    char GetASCII(int grey); //skala: ' ', '.', '*', '%', '@'
+    char GetASCII(double grey); //skala: ' ', '.', '*', '%', '@'
     void CursorVisibility(bool value);
 public:
-    void Render(int** greyscale);
+    void Render(double** greyscale);
     Screen(int xSize, int ySize);
+    int GetWidth() {return xSize_;}
+    int GetHeight() {return ySize_;}
 };
 
 
