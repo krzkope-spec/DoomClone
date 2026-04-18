@@ -6,7 +6,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include<iostream>
-
+#include<windows.h>
 int Game::LoadMap(const char *filename) {
     int mapX, mapY, channels;
     unsigned char *img = stbi_load(filename, &mapX, &mapY, &channels, 3);
@@ -31,4 +31,14 @@ int Game::LoadMap(const char *filename) {
     }
     stbi_image_free(img);
     return 0;
+}
+void Game::Start() {
+    s_.ShowConsoleCursor(false);
+    while (true) {
+        Update();
+        Sleep(deltaTime_);
+    }
+}
+void Game::Update() {
+
 }

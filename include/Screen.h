@@ -17,6 +17,8 @@ public:
     Screen(int xSize, int ySize);
     int GetWidth() {return xSize_;}
     int GetHeight() {return ySize_;}
+    void ShowConsoleCursor(bool showFlag);
+    void CursorToZero();
 };
 
 

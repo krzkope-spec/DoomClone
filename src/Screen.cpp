@@ -34,6 +34,16 @@ void Screen::Render(const std::vector<std::vector<double>> greyScale) {
     }
     std::cout<<oss.str();
 }
+void Screen::CursorToZero() {
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), {0,0});
+}
+void Screen::ShowConsoleCursor(bool showFlag) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(hConsole, &cursorInfo);
+    cursorInfo.bVisible = showFlag;
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
+}
 char Screen::GetASCII(double grey) {
     //grey ranges from 0-1
     if (grey<0.2) return ' ';
