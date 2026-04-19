@@ -24,21 +24,31 @@ int Game::LoadMap(const char *filename) {
             unsigned char b = img[index + 2];
             if (r == 0 && g == 0 && b == 0) {
                 map_[y][x] = true;
-            } else {
+            }
+            else if (g==0&&b==0) {
+                player_.setPos(x,y);
+                map_[y][x] = false;
+            }
+            else {
                 map_[y][x] = false;
             }
         }
     }
     stbi_image_free(img);
+    player_.UploadMap(map_);
     return 0;
 }
 void Game::Start() {
     s_.ShowConsoleCursor(false);
     SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
+    eventMngr_.AddEventListener(EventManager::KEYBOARD_DOWN, [this](int input){MovePlayer(input);});
     while (true) {
         Update();
         Sleep(deltaTime_);
     }
+}
+void Game::MovePlayer(int input) {
+    player_.Move(input);
 }
 void Game::Update() {
     ProcessInput(&mouseX_, &mouseY_);
@@ -60,8 +70,7 @@ void Game::ProcessInput(int* x, int* y) {
                 auto& keyEvent = inputBuffer[i].Event.KeyEvent;
                 if (keyEvent.bKeyDown) {
                     // keyEvent.wVirtualKeyCode zawiera kod klawisza (np. VK_UP)
-                    eventMngr_.KeyboardDown(keyEvent.wVirtualKeyCode);
-                }
+                    eventMngr_.KeyboardDown(keyEvent.wVirtualKeyCode);}
             }
             else if (inputBuffer[i].EventType == MOUSE_EVENT) {
                 auto& mouseEv = inputBuffer[i].Event.MouseEvent;

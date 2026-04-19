@@ -11,6 +11,7 @@ private:
     int xSize_;
     int ySize_;
     char GetASCII(double grey) const; //skala: ' ', '.', '*', '%', '@'
+    std::vector<double> castSingleRay(double x, double y, double angle, std::vector<std::vector<double>> map) const;
 public:
     void Render(std::vector<std::vector<double>> greyscale) const;
     Screen(int xSize, int ySize);
@@ -18,6 +19,7 @@ public:
     int GetHeight() const {return ySize_;}
     void ShowConsoleCursor(bool showFlag) const;
     void CursorToZero() const;
+    std::vector<std::vector<double>> Raycast(double x, double y, double angle, std::vector<std::vector<double>> map) const;
 };
 
 

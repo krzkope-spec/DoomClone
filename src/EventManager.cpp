@@ -10,7 +10,6 @@ void EventManager::MouseClick(int button) const{
     }
 }
 void EventManager::MouseMove(int x, int y) const {
-    std::cout<<"Mamy "<<mouseMoveListeners_.size()<<" sluchaczy"<<std::endl;
     for (const auto& f : mouseMoveListeners_) {
         f(x,y);
     }

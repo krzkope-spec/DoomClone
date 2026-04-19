@@ -7,7 +7,7 @@
 #include<Game.h>
 #include <iostream>
 #include <ostream>
-
+#include<cmath>
 
 class Testing {
 private:
@@ -27,20 +27,26 @@ public:
     }
     void printMap() {
         g_.LoadMap("../maps/mapa_test.png");
-        g_.getScreen()->Render(mapindoubles(g_.getMap()));
+        std::cout<<"Zaladowano"<<std::endl;
+        g_.getEventManager().AddEventListener(EventManager::KEYBOARD_DOWN, [this](int key){mapPrint(key);});
     }
-    std::vector<std::vector<double>> mapindoubles(std::vector<std::vector<bool>> map) {
+    void mapPrint(int key) {
+        //std::cout<<key<<std::endl;
+        g_.getScreen()->Render(mapindoubles(g_.getMap(), g_.getPlayer()->getPos()));
+    }
+    std::vector<std::vector<double>> mapindoubles(std::vector<std::vector<bool>> map, std::vector<double> pPos) {
         std::vector result(map.size(), std::vector<double>(map[0].size()));
         for (int i=0; i<map.size(); i++) {
             for (int j=0; j<map[0].size(); j++) {
                 if (map[i][j]) {
-                    result[i][j] = 1;
+                    result[j][i] = 1;
                 }
                 else {
-                    result[i][j] = 0;
+                    result[j][i] = 0;
                 }
             }
         }
+        result[round(pPos[1])][round(pPos[0])] = -1;
         return result;
     }
     void MouseMovement() {

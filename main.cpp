@@ -2,9 +2,9 @@
 #include "Game.h"
 #include "Testing.h"
 int main() {
-    Game game = Game(80,30);
+    Game game = Game(80,35);
     Testing testing = Testing(game);
-    testing.MouseMovement();
+    testing.printMap();
     game.Start();
     return EXIT_SUCCESS;
 }
