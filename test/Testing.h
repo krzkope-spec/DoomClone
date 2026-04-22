@@ -53,6 +53,12 @@ public:
         g_.getEventManager().AddEventListener(EventManager::MOUSE_MOVE,[](int x, int y){std::cout<<"Ruszono o: "<<x<<" "<<y<<std::endl;});
         g_.getEventManager().AddEventListener(EventManager::KEYBOARD_DOWN,[](int x){std::cout<<"Wcisnieto: "<<x<<std::endl;});
     }
+    void Raycasting() {
+        std::vector<double> pPos = g_.getPlayer()->getPos();
+        std::vector<double> screenMax = g_.getScreen()->Raycast(pPos[0], pPos[1], 1, g_.getMap())[0];
+        std::cout<<screenMax[0]<<" "<<screenMax[1]<<std::endl;
+    }
+
 };
 
 

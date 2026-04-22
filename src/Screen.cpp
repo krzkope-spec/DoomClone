@@ -5,8 +5,8 @@
 #include<vector>
 #include<algorithm>
 #include<cmath>
+#include "Matray.hpp"
 
-#define FOV 1
 
 Screen::Screen(int xSize, int ySize) {
     xSize_ = xSize;
@@ -57,16 +57,18 @@ char Screen::GetASCII(double grey) const{
     if (grey<0.8) return '#';
     return '@';
 }
-std::vector<std::vector<double>> Screen::Raycast(double x, double y, double angle, std::vector<std::vector<double>> map) const{
-    std::vector<std::vector<double>> result;
-    for (int i=0; i<xSize_; i++) {
-        double angleRelative = atan(FOV*i-xSize_/2);
-        double angleFull = angle+angleRelative;
-        result.push_back(castSingleRay(x,y, angleFull, map));
-    }
-    //return: xHit, yHit, kąt normalnej dla każdego z promineni
-    return result;
+std::vector<std::vector<double>> Screen::Raycast(double x, double y, double angle, std::vector<std::vector<bool>> map) const{
+    std::vector<double> direction = {1,0};
+    RotateVector(direction, angle);
+    std::vector<double> screenMax = direction;
+    RotateVector(screenMax, M_PI/2);
+    MultiplyVector(screenMax, FOV);
+    std::vector<double> target = AddVectors(direction, screenMax);
+    NormalizeVector(target);
+    return std::vector<std::vector<double>>{castSingleRay(x, y, target, map)};
 }
-std::vector<double> Screen::castSingleRay(double x, double y, double angle, std::vector<std::vector<double>> map) const{
+std::vector<double> Screen::castSingleRay(double x, double y, std::vector<double> direction, std::vector<std::vector<bool>> map) const{
+    double sideX = direction[0]>0 ? ceil(x) : floor(x);
+    double sideY = direction[1]>0 ? ceil(y) : floor(y);
     return std::vector{0.0,0.0,0.0};
 }
