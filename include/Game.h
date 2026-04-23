@@ -11,12 +11,14 @@ private:
     Screen s_;
     EventManager eventMngr_;
     int mouseX_, mouseY_;
+    const double DPI = 0.05;
     std::vector<std::vector<bool>> map_;
     Player player_;
     int deltaTime_ = 10;
     void Update();
     void ProcessInput(int* x, int* y);
     void MovePlayer(int input);
+    void RotatePlayer(double angle);
 public:
     Game(int xSize, int ySize) : s_(xSize, ySize), eventMngr_(), mouseX_(0), mouseY_(0), player_(1,1){
     };

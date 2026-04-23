@@ -6,7 +6,8 @@
 #define DOOMCLONE_PLAYER_H
 #include<vector>
 
-#define SPEED 1.0
+#define SPEED 0.1
+#define ROT_SPEED 0.05
 
 class Player {
 private:
@@ -21,6 +22,8 @@ public:
     void Move(int keyCode);
     std::vector<double> getPos() const {return pos_;};
     void setPos(double x, double y);
+    void Rotate(double angle);
+    double getAngle() const {return direction;}
 };
 
 #endif //DOOMCLONE_PLAYER_H

@@ -74,15 +74,15 @@ std::vector<std::vector<double>> Screen::Raycast(double x, double y, double angl
 }
 void Screen::Render3D(double x, double y, double angle, std::vector<std::vector<bool>> map) const{
     std::vector<std::vector<double>> raycastResults = Raycast(x,y, angle, map);
-    const double maxDistance = 27;
+    const double maxDistance = 80;
     const int maxHeight = ySize_-4;
     std::vector screen(maxHeight, std::vector(xSize_, 0.0));
     for (int i=0; i<xSize_; i++) {
         double distance = raycastResults[i][0];
-        double greyscale = raycastResults[i][1]==0 ? 1 : 0.6;
+        double greyscale = raycastResults[i][1]==0 ? 0.5 : 0.6;
         int height = floor(std::max((maxDistance-distance)/maxDistance*(double)maxHeight, 0.0));
         int startHeight = (ySize_-height)/2;
-        for (int j=0; j<height; j++) {
+        for (int j=0; j<height-2; j++) {
             screen[j+startHeight][i] = greyscale;
         }
     }
@@ -99,6 +99,7 @@ std::vector<double> Screen::castSingleRay(double x, double y, std::vector<double
     mapX = (int)x;
     mapY = (int)y;
     double sideDistX, sideDistY;
+    double side0X, side0Y;
 
     double deltaDistX = (direction[0]==0) ? 1e30 : std::abs(1/direction[0]);
     double deltaDistY = (direction[1]==0) ? 1e30 : std::abs(1/direction[1]);
@@ -106,22 +107,24 @@ std::vector<double> Screen::castSingleRay(double x, double y, std::vector<double
     int stepX, stepY;
     bool hit = false;
     int side = 0;
-    if (direction[0]>0) {
+    if (direction[0]<0) {
         sideDistX = (x-mapX)*deltaDistX;
-        stepX = 1;
+        stepX = -1;
     }
     else {
         sideDistX = (x+1.0-mapX)*deltaDistX;
-        stepX = -1;
+        stepX = 1;
     }
-    if (direction[1]>0) {
+    if (direction[1]<0) {
         sideDistY = (y-mapY)*deltaDistY;
-        stepY = 1;
+        stepY = -1;
     }
     else {
         sideDistY = (y+1.0-mapY)*deltaDistY;
-        stepY = -1;
+        stepY = 1;
     }
+    side0X = sideDistX;
+    side0Y = sideDistY;
     while (!hit) {
         if (sideDistX<sideDistY) {
             sideDistX += deltaDistX;

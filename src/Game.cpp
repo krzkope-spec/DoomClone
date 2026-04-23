@@ -6,6 +6,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include<iostream>
+#include <map>
 #include<windows.h>
 int Game::LoadMap(const char *filename) {
     int mapX, mapY, channels;
@@ -39,9 +40,11 @@ int Game::LoadMap(const char *filename) {
     return 0;
 }
 void Game::Start() {
+    LoadMap("../maps/mapa_test_2.png");
     s_.ShowConsoleCursor(false);
     SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
     eventMngr_.AddEventListener(EventManager::KEYBOARD_DOWN, [this](int input){MovePlayer(input);});
+    eventMngr_.AddEventListener(EventManager::MOUSE_MOVE, [this](int x, int y){RotatePlayer((double)x*DPI);});
     while (true) {
         Update();
         Sleep(deltaTime_);
@@ -50,8 +53,12 @@ void Game::Start() {
 void Game::MovePlayer(int input) {
     player_.Move(input);
 }
+void Game::RotatePlayer(double input) {
+    player_.Rotate(input);
+}
 void Game::Update() {
     ProcessInput(&mouseX_, &mouseY_);
+    s_.Render3D(player_.getPos()[0], player_.getPos()[1], player_.getAngle(), map_);
 
 }
 void Game::ProcessInput(int* x, int* y) {
