@@ -29,6 +29,7 @@ public:
         g_.LoadMap("../maps/mapa_test.png");
         std::cout<<"Zaladowano"<<std::endl;
         g_.getEventManager().AddEventListener(EventManager::KEYBOARD_DOWN, [this](int key){mapPrint(key);});
+        g_.getScreen()->Render(mapindoubles(g_.getMap(), g_.getPlayer()->getPos()));
     }
     void mapPrint(int key) {
         //std::cout<<key<<std::endl;
@@ -54,9 +55,10 @@ public:
         g_.getEventManager().AddEventListener(EventManager::KEYBOARD_DOWN,[](int x){std::cout<<"Wcisnieto: "<<x<<std::endl;});
     }
     void Raycasting() {
+        g_.LoadMap("../maps/mapa_test.png");
         std::vector<double> pPos = g_.getPlayer()->getPos();
-        std::vector<double> screenMax = g_.getScreen()->Raycast(pPos[0], pPos[1], 1, g_.getMap())[0];
-        std::cout<<screenMax[0]<<" "<<screenMax[1]<<std::endl;
+        //std::vector<double> screenMax = g_.getScreen()->Raycast(pPos[0], pPos[1], 0, g_.getMap())[0];
+        g_.getScreen()->Render3D(pPos[0], pPos[1], 0, g_.getMap());
     }
 
 };

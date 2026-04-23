@@ -62,13 +62,85 @@ std::vector<std::vector<double>> Screen::Raycast(double x, double y, double angl
     RotateVector(direction, angle);
     std::vector<double> screenMax = direction;
     RotateVector(screenMax, M_PI/2);
-    MultiplyVector(screenMax, FOV);
-    std::vector<double> target = AddVectors(direction, screenMax);
-    NormalizeVector(target);
-    return std::vector<std::vector<double>>{castSingleRay(x, y, target, map)};
+    std::vector<std::vector<double>> results;
+    for (int i=0; i<xSize_; i++) {
+        std::vector<double> screenDir = screenMax;
+        MultiplyVector(screenDir, FOV*((double)(i-xSize_/2)/(double)xSize_));
+        std::vector<double> target = AddVectors(direction, screenDir);
+        NormalizeVector(target);
+        results.push_back(castSingleRay(x,y, target, map));
+    }
+    return results;
 }
-std::vector<double> Screen::castSingleRay(double x, double y, std::vector<double> direction, std::vector<std::vector<bool>> map) const{
-    double sideX = direction[0]>0 ? ceil(x) : floor(x);
-    double sideY = direction[1]>0 ? ceil(y) : floor(y);
-    return std::vector{0.0,0.0,0.0};
+void Screen::Render3D(double x, double y, double angle, std::vector<std::vector<bool>> map) const{
+    std::vector<std::vector<double>> raycastResults = Raycast(x,y, angle, map);
+    const double maxDistance = 27;
+    const int maxHeight = ySize_-4;
+    std::vector screen(maxHeight, std::vector(xSize_, 0.0));
+    for (int i=0; i<xSize_; i++) {
+        double distance = raycastResults[i][0];
+        double greyscale = raycastResults[i][1]==0 ? 1 : 0.6;
+        int height = floor(std::max((maxDistance-distance)/maxDistance*(double)maxHeight, 0.0));
+        int startHeight = (ySize_-height)/2;
+        for (int j=0; j<height; j++) {
+            screen[j+startHeight][i] = greyscale;
+        }
+    }
+   /* for (int i=0; i<xSize_; i++) {
+        for (int j=0; j<ySize_; j++) {
+            std::cout<<screen[i][j]<<" ";
+        }
+        std::cout<<std::endl;
+    }*/
+    Render(screen);
+}
+std::vector<double> Screen::castSingleRay(double x, double y, std::vector<double> direction, std::vector<std::vector<bool>> map) const {
+    int mapX, mapY;
+    mapX = (int)x;
+    mapY = (int)y;
+    double sideDistX, sideDistY;
+
+    double deltaDistX = (direction[0]==0) ? 1e30 : std::abs(1/direction[0]);
+    double deltaDistY = (direction[1]==0) ? 1e30 : std::abs(1/direction[1]);
+
+    int stepX, stepY;
+    bool hit = false;
+    int side = 0;
+    if (direction[0]>0) {
+        sideDistX = (x-mapX)*deltaDistX;
+        stepX = 1;
+    }
+    else {
+        sideDistX = (x+1.0-mapX)*deltaDistX;
+        stepX = -1;
+    }
+    if (direction[1]>0) {
+        sideDistY = (y-mapY)*deltaDistY;
+        stepY = 1;
+    }
+    else {
+        sideDistY = (y+1.0-mapY)*deltaDistY;
+        stepY = -1;
+    }
+    while (!hit) {
+        if (sideDistX<sideDistY) {
+            sideDistX += deltaDistX;
+            mapX+=stepX;
+            side = 0;
+        }
+        else {
+            sideDistY += deltaDistY;
+            mapY+=stepY;
+            side = 1;
+        }
+        if (mapX>=map.size()||mapY>=map[0].size()||mapX<0||mapY<0) {
+            {
+                //nie trafiliśmy na nic
+                return std::vector<double>{-1,-1,-1};
+            }
+        }
+        hit = map[mapX][mapY];
+    }
+    double perpWallDist = (side==0) ? (sideDistX-deltaDistX) : (sideDistY-deltaDistY);
+    return std::vector{perpWallDist, static_cast<double>(side)}; //side = 0 dla ściany pionowej, side = 1 dla ściany poziomej
 }
